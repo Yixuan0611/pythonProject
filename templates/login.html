@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} FashionEvo - Create Account{% endblock %}
+{% from "includes/_formHelper.html" import render_field %}
+{% block content %}
+<section id="loginform">
+    <div class="wrapper">
+        <h1 class="display-4">Login</h1>
+        <form method="POST" action="">
+            <div class="inputbox">
+                {{ render_field(form.email, class="form-control") }}
+            </div>
+            <div class="inputbox">
+                {{ render_field(form.password, class="form-control") }}
+                <a href="/verify">Forgot Password</a>
+            </div>
+
+           <div class="login-btn"> <button type="submit" value="submit" class="login-btn">Login</button></div>
+            <div class="register-link">
+                <p>Dont have an account?<a href="create_customer">Register Here</a></p>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

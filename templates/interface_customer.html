@@ -1,0 +1,48 @@
+{% extends "base_customer.html" %}
+{% block title %}FashionEvo - Retrieve Customers{% endblock %}
+
+{% block content %}
+{% if customer %}
+<h1 class="display-4">{{customer.get_first_name() + " " + customer.get_last_name()}}</h1>
+<div>
+    <section>
+        <div>
+            <label for="">First name: {{customer.get_first_name()}}</label>
+        </div>
+        <div>
+            <label for="">Last name: {{customer.get_last_name()}}</label>
+        </div>
+        <div>
+            <label for="">Email: {{customer.get_email()}}</label>
+        </div>
+        <div>
+            <label for="">Gender: {{customer.get_gender()}}</label>
+        </div>
+        <div>
+            <label for="">Date of birth: {{customer.get_dob()}}</label>
+        </div>
+        <div>
+            <label for="">Height: {{customer.get_height()}}</label>
+        </div>
+        <div>
+            <label for="">Shoe size: {{customer.get_shoe_size()}}</label>
+        </div>
+        <div>
+            <label for="">Personal style: {{customer.get_personal_style()}}</label>
+        </div>
+        <div>
+            <label for="">Events: {{customer.get_events()}}</label>
+        </div>
+        <div>
+            <label for="">Points: {{customer.get_points()}}</label>
+        </div>
+        <div>
+            <label for="">Password: {{customer.get_password()}}</label>
+        </div>
+        <td><a href="/update_customer/{{customer.get_customer_id()}}" class="updatebtn">Update</a></td>
+    </section>
+</div>
+{% else %}
+    <p>No customer profile available</p>
+{% endif %}
+{% endblock %}
