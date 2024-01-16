@@ -1,3 +1,6 @@
+{% if 'user_role' in session %}
+{% if session['user_role'] == 'staff' %}
+<!-- Navbar options for staff -->
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#" style="color: green;">Fashion Evo</a>
@@ -5,7 +8,50 @@
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse">
+            <div class="navbar-nav">
+                <a class="nav-link" href="interface_staff">View Own Profile</a>
+                <a class="nav-link" href="z_staffprofiles">Staff Profiles</a>
+                <a class="nav-link" href="z_customerprofiles">Customer Profiles</a>
+                <a class="nav-link" href="z_stockdatabase">Stock Database</a>
+                <a class="nav-link" href="#">Report Analysis</a>
+                <a class="nav-link" href="/logout" style="background-color: green; color: white">Log Out</a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+{% elif session['user_role'] == 'customer' %}
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="color: green;">Fashion Evo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <div class="navbar-nav">
+                <a class="nav-link" href="a_homepage">Home</a>
+                <a class="nav-link" href="a_promotionalpage">Promotional Event</a>
+                <a class="nav-link" href="a_productspage">Products Page</a>
+                <a class="nav-link" href="interface_customer">View Profile</a>
+                <a class="nav-link" href="interface_cart" style="background-color: green; color: white">Cart</a>
+                <a class="nav-link" href="/logout" style="background-color: green; color: white">Log Out</a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+{% endif %}
+{% else %}
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="color: green;">Fashion Evo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
             <div class="navbar-nav">
                 <a class="nav-link" href="a_homepage">Home</a>
                 <a class="nav-link" href="a_promotionalpage">Promotional Event</a>
@@ -15,3 +61,5 @@
         </div>
     </div>
 </nav>
+{% endif %}
+
