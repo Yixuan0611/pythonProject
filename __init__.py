@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from Forms import CreateCustomerForm, CreateProductForm, CreateStaffForm, LoginForm
 import shelve, Customer, Products, Staff
+from LoginCheck import logincheck
+from User import User
 
 app = Flask(__name__,static_url_path='/static')
 app.secret_key = 'your_secret_key'
@@ -22,6 +24,7 @@ def home():
 def login():
     create_login_form = LoginForm(request.form)
     if request.method == 'POST' and create_login_form.validate():
+        customer = logincheck(create_login_form.email.data,create_login_form.password.data)
         customer_dict = {}
         db = shelve.open('customer.db', 'r')
         customer_dict = db['Customers']
@@ -30,20 +33,30 @@ def login():
         db = shelve.open('staff.db', 'r')
         staff_dict = db['Staff']
         db.close()
-
-        email = create_login_form.email.data
-        password = create_login_form.password.data
-
-        if email in customer_dict:
-            user = customer_dict[email]
-            if password == user.get_password():
-                user_role = 'customer'
+        if customer.email_get() in customer_dict:
+            user = customers_dict.get(customer.email_get())
+            if customer.password_get() == user.get_password():
                 return redirect(url_for('interface_customer'))
-        elif email in staff_dict:
-            user = staff_dict[email]
-            if password == user.get_password():
-                user_role = 'staff'
-                return redirect(url_for('interface_staff'))
+            elif customer.email_get() in staff_dict:
+                print('in staff db')
+                user = staff_dict.get(customer.email_get())
+                print(user.get_password())
+                if customer.password_get() == user.get_password():
+                    return redirect(url_for('interface_staff'))
+
+        # email = create_login_form.email.data
+        # password = create_login_form.password.data
+        #
+        # if email in customer_dict:
+        #     user = customer_dict[email]
+        #     if password == user.get_password():
+        #         user_role = 'customer'
+        #         return redirect(url_for('interface_customer'))
+        # elif email in staff_dict:
+        #     user = staff_dict[email]
+        #     if password == user.get_password():
+        #         user_role = 'staff'
+        #         return redirect(url_for('interface_staff'))
 
     return render_template('login.html', form=create_login_form)
 
