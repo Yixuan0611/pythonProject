@@ -1,7 +1,7 @@
 class Staff:
     count_id = 0
 
-    def __init__(self, first_name, last_name, gender, email, dob, position, contact_number):
+    def __init__(self, first_name, last_name, gender, email, dob, position, contact_number, password):
         Staff.count_id += 1
         self.__staff_id = Staff.count_id
         self.__first_name = first_name
@@ -11,6 +11,7 @@ class Staff:
         self.__dob = dob
         self.__position = position
         self.__contact_number = contact_number
+        self.__password = password
 
     # Getter methods
 
@@ -38,6 +39,9 @@ class Staff:
     def get_contact_number(self):
         return self.__contact_number
 
+    def get_password(self):
+        return self.__password
+
     # Setter methods
     def set_staff_id(self, staff_id):
         self.__staff_id = staff_id
@@ -62,3 +66,6 @@ class Staff:
 
     def set_contact_number(self, contact_number):
         self.__contact_number = contact_number
+
+    def set_password(self, password):
+        self.__password = password

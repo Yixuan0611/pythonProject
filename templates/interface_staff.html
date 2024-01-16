@@ -1,6 +1,41 @@
 {% extends "base.html" %}
-{% block title %}FashionEvo - Retrieve Staff{% endblock %}
+{% block title %}FashionEvo - Retrieve Staffs{% endblock %}
 
 {% block content %}
-<p>shio to do</p>
+{% if staff %}
+<h1 class="display-4">{{staff.get_first_name() + " " + staff.get_last_name()}}</h1>
+<div>
+    <section>
+        <div>
+            <label for="">First name: {{staff.get_first_name()}}</label>
+        </div>
+        <div>
+            <label for="">Last name: {{staff.get_last_name()}}</label>
+        </div>
+        <div>
+            <label for="">Email: {{staff.get_email()}}</label>
+        </div>
+        <div>
+            <label for="">Gender: {{staff.get_gender()}}</label>
+        </div>
+        <div>
+            <label for="">Date of birth: {{staff.get_dob()}}</label>
+        </div>
+        <div>
+            <label for="">Position: {{staff.get_position()}}</label>
+        </div>
+        <div>
+            <label for="">Contact Number: {{staff.get_contact_number()}}</label>
+        </div>
+        <div>
+            <label for="">Password: {{staff.get_password()}}</label>
+        </div>
+        <td><a href="/update_staff/{{staff.get_staff_id()}}" class="updatebtn">Update</a></td>
+    </section>
+</div>
+{% else %}
+    <p>No staff profile available</p>
+{% endif %}
 {% endblock %}
+
+

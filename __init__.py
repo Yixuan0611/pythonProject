@@ -160,6 +160,124 @@ def delete_customer(id):
 
     return redirect(url_for('retrieve_customer'))
 
+
+#CRUD for staff
+@app.route('/create_staff', methods=['GET', 'POST'])
+def create_staff():
+    create_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and create_staff_form.validate():
+        staff_dict = {}
+        db = shelve.open('staff.db', 'c')
+
+        try:
+            staff_dict = db['Staff']
+        except:
+            print("Error in retrieving Staff from staff.db.")
+
+        staff = Staff.Staff(create_staff_form.first_name.data, create_staff_form.last_name.data,create_staff_form.gender.data,
+                      create_staff_form.email.data,create_staff_form.dob.data, create_staff_form.position.data,
+                      create_staff_form.contact_number.data,create_staff_form.password.data)
+        staff_dict[staff.get_staff_id()] = staff
+        db['Staff'] = staff_dict
+
+        db.close()
+
+        return redirect(url_for('viewstaffprofile', id=staff.get_staff_id()))
+    return render_template('create_staff.html', form=create_staff_form)
+
+@app.route('/z_staffprofiles')
+def retrieve_staff():
+    staff_dict = {}
+    db = shelve.open('staff.db', 'r')
+
+    try:
+        staff_dict = db['Staff']
+    except:
+        print("Error in retrieving Staff from staff.db.")
+
+    db.close()
+
+    staff_list = [staff_dict[key] for key in staff_dict]
+
+    return render_template('z_staffprofiles.html', count=len(staff_list), staff_list=staff_list)
+
+@app.route('/interface_staff/<int:id>')
+def viewstaffprofile(id):
+    staff_dict = {}
+    db = shelve.open('staff.db', 'r')
+    staff_dict = db['Staff']
+    db.close()
+    staff = staff_dict.get(id)
+    return render_template('interface_staff.html', staff=staff)
+
+@app.route('/update_staff/<int:id>/', methods=['GET', 'POST'])
+def update_staff(id):
+    update_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and update_staff_form.validate():
+        staff_dict = {}
+        db = shelve.open('staff.db', 'w')
+
+        try:
+            staff_dict = db['Staff']
+        except:
+            print("Error in retrieving Staff from staff.db.")
+
+        staff = staff_dict.get(id)
+        staff.set_first_name(update_staff_form.first_name.data)
+        staff.set_last_name(update_staff_form.last_name.data)
+        staff.set_gender(update_staff_form.gender.data)
+        staff.set_email(update_staff_form.email.data)
+        staff.set_dob(update_staff_form.dob.data)
+        staff.set_position(update_staff_form.position.data)
+        staff.set_contact_number(update_staff_form.contact_number.data)
+        staff.set_password(update_staff_form.password.data)
+
+        db['Staff'] = staff_dict
+        db.close()
+
+        return redirect(url_for('retrieve_staff'))
+    else:
+        staff_dict = {}
+        db = shelve.open('staff.db', 'r')
+
+        try:
+            staff_dict = db['Staff']
+        except:
+            print("Error in retrieving Staff from staff.db.")
+
+        db.close()
+
+        staff = staff_dict.get(id)
+        update_staff_form.first_name.data = staff.get_first_name()
+        update_staff_form.last_name.data = staff.get_last_name()
+        update_staff_form.email.data = staff.get_email()
+        update_staff_form.dob.data = staff.dob()
+        update_staff_form.contact_number.data = staff.get_contact_number()
+        update_staff_form.position.data = staff.get_position()
+        update_staff_form.contact_number.data = staff.get_contact_number()
+        update_staff_form.password.data = staff.get_password()
+
+        return render_template('update_staff.html', form=update_staff_form)
+
+@app.route('/delete_staff/<int:id>', methods=['POST'])
+def delete_staff(id):
+    staff_dict = {}
+    db = shelve.open('staff.db', 'w')
+
+    try:
+        staff_dict = db['Staff']
+    except:
+        print("Error in retrieving Staff from staff.db.")
+
+    staff_dict.pop(id)
+
+    db['Staff'] = staff_dict
+    db.close()
+
+    return redirect(url_for('retrieve_staff'))
+
+
+
 #CRUD for products
 @app.route('/createProducts', methods=['GET', 'POST'])
 def create_products():
@@ -182,7 +300,6 @@ def create_products():
 
         return redirect(url_for('interface_cart'))
     return render_template('create_products.html', form=create_products_form)
-
 
 @app.route('/retrieveProducts')
 def retrieve_products():
