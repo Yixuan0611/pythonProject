@@ -1,14 +1,13 @@
 class Products:
     count_id = 0
 
-    def __init__(self, name, price, quantity, description, category):
+    def __init__(self, name, price, quantity, description):
         Products.count_id += 1
         self.__product_id = Products.count_id
         self.__name = name
         self.__price = price
         self.__quantity = quantity
         self.__description = description
-        self.__category = category
 
     # Getter methods
 
@@ -27,9 +26,6 @@ class Products:
     def get_description(self):
         return self.__description
 
-    def get_category(self):
-        return self.__category
-
     # Setter methods
 
     def set_product_id(self, product_id):
@@ -46,6 +42,3 @@ class Products:
 
     def set_description(self, description):
         self.__description = description
-
-    def set_category(self, category):
-        self.__category = category

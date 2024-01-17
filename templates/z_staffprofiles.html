@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Library Loan System - Retrieve Staff{% endblock %}
+{% block title %} FashionEvo - Retrieve Staff {% endblock %}
 
 {% block content %}
 <h1 class="display-4">Retrieve Staff</h1>
@@ -19,24 +19,27 @@
             <th>Customer ID</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Gender</th>
             <th>Email</th>
-            <th>Date of Birth</th>
-            <th>Position</th>
             <th>Password</th>
-
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Contact Number</th>
+            <th>Position</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         {% for staff in staffs_list %}
         <tr>
-            <td>{{ staff.get_user_id() }}</td>
+            <td>{{ staff.get_staff_id() }}</td>
             <td>{{ staff.get_first_name() }}</td>
             <td>{{ staff.get_last_name() }}</td>
-            <td>{{ staff.get_gender() }}</td>
             <td>{{ staff.get_email() }}</td>
-            <td>{{ staff.get_dob() }}</td>
             <td>{{ staff.get_password() }}</td>
+            <td>{{ staff.get_gender() }}</td>
+            <td>{{ staff.get_dob() }}</td>
+            <td>{{ staff.get_contact_number() }}</td>
             {% if staff.get_position() == "F" %}
             <td>Fellow</td>
             {% elif staff.get_position() == "S" %}
@@ -45,11 +48,9 @@
             <td>Professional</td>
             {% endif %}
 
-            <td><a href="/update_staff/{{staff.get_staff_id()}}" class="btn btn-warning">Update</a></td>
+            <td><a href="/interface_staff/{{staff.get_staff_id()}}" class="btn btn-warning">Update</a></td>
             <td>
                 <form action="{{url_for('delete_staff', id=staff.get_staff_id())}}" method="POST">
-                    <!--            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}}?');">-->
-                    <!-- Button to Open the Modal -->
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#myModal_{{staff.get_staff_id()}}">
                         Delete

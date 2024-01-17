@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}FashionEvo - Retrieve Customers{% endblock %}
+{% block title %} FashionEvo - Retrieve Customers {% endblock %}
 
 {% block content %}
 <h1 class="display-4">Retrieve Customers</h1>
@@ -19,9 +19,15 @@
             <th>Customer ID</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Gender</th>
             <th>Email</th>
+            <th>Password</th>
+            <th>Gender</th>
             <th>Date of Birth</th>
+            <th>Contact Number</th>
+            <th>Height</th>
+            <th>Shoe Size</th>
+            <th>Personal Style</th>
+            <th>Events</th>
             <th></th>
             <th></th>
         </tr>
@@ -32,10 +38,18 @@
             <td>{{ customer.get_customer_id() }}</td>
             <td>{{ customer.get_first_name() }}</td>
             <td>{{ customer.get_last_name() }}</td>
-            <td>{{ customer.get_gender() }}</td>
             <td>{{ customer.get_email() }}</td>
+            <td>{{ customer.get_password() }}</td>
+            <td>{{ customer.get_gender() }}</td>
             <td>{{ customer.get_dob() }}</td>
-            <td><a href="/interface_customer/{{customer.get_customer_id()}}" class="btn btn-warning">viewprofile</a></td>
+            <td>{{ customer.get_contact_number() }}</td>
+            <td>{{ customer.get_height() }}</td>
+            <td>{{ customer.get_shoe_size() }}</td>
+            <td>{{ customer.get_personal_style() }}</td>
+            <td>{{ customer.get_events() }}</td>
+
+            <td><a href="/interface_customer/{{customer.get_customer_id()}}" class="btn btn-warning">viewprofile</a>
+            </td>
             <td>
                 <form action="{{url_for('delete_customer', id=customer.get_customer_id())}}" method="POST">
                     <!-- Button to Open the Modal -->

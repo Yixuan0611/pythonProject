@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}FashionEvo - Retrieve Staffs{% endblock %}
+{% block title %} FashionEvo - Individual Staff Profile {% endblock %}
 
 {% block content %}
 {% if staff %}
@@ -16,25 +16,26 @@
             <label for="">Email: {{staff.get_email()}}</label>
         </div>
         <div>
+            <label for="">Password: {{staff.get_password()}}</label>
+        </div>
+        <div>
             <label for="">Gender: {{staff.get_gender()}}</label>
         </div>
         <div>
             <label for="">Date of birth: {{staff.get_dob()}}</label>
         </div>
         <div>
-            <label for="">Position: {{staff.get_position()}}</label>
-        </div>
-        <div>
             <label for="">Contact Number: {{staff.get_contact_number()}}</label>
         </div>
         <div>
-            <label for="">Password: {{staff.get_password()}}</label>
+            <label for="">Position: {{staff.get_position()}}</label>
         </div>
+
         <td><a href="/update_staff/{{staff.get_staff_id()}}" class="updatebtn">Update</a></td>
     </section>
 </div>
 {% else %}
-    <p>No staff profile available</p>
+<p>No staff profile available</p>
 {% endif %}
 {% endblock %}
 

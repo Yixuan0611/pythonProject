@@ -1,40 +1,43 @@
 {% extends "base.html" %}
-{% block title %}FashionEvo - Create Staff{% endblock %}
+{% block title %} FashionEvo - Create Staff Account{% endblock %}
 
 {% from "includes/_formHelper.html" import render_field %}
 {% block content %}
+<form method="post" action="">
+    <div class="column is-4 is-offset-4">
+        <div class="box">
+            <h3 class="first-title">New Staff</h3>
+            <form method="POST" action="/signup">
+                <div class="form-group">
+                    {{ render_field(form.first_name, class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.last_name, class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.email, class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.password, class="form-control", placeholder="Password") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.gender, class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.dob, class="form-control datepicker") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.contact_number, class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.position, class="form-check", style="list-style-type:none") }}
+                </div>
 
-<h1 class="display-4">Create Staff</h1>
-
-<form method="POST" action="">
-    <div class="form-group">
-        {{ render_field(form.first_name, class="form-control") }}
+                <div class="login-btn">
+                    <button type="submit" value="submit" class="login-btn">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        {{ render_field(form.last_name, class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.gender, class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.email, class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.dob, class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.position, class="form-check", style="list-style-type:none") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.contact_number, class="form-check", style="list-style-type:none") }}
-    </div>
-
-    <div class="form-group">
-        {{ render_field(form.password, class="form-check", style="list-style-type:none") }}
-    </div>
-
-    </div>
-    </div>
-    <input type="submit" value="Submit" class="btn btn-primary"/>
 </form>
 {% endblock %}

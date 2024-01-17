@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}FashionEvo - Retrieve Customers{% endblock %}
+{% block title %} FashionEvo - Individual Customer Profile {% endblock %}
 
 {% block content %}
 {% if customer %}
@@ -16,10 +16,16 @@
             <label for="">Email: {{customer.get_email()}}</label>
         </div>
         <div>
+            <label for="">Password: {{customer.get_password()}}</label>
+        </div>
+        <div>
             <label for="">Gender: {{customer.get_gender()}}</label>
         </div>
         <div>
             <label for="">Date of birth: {{customer.get_dob()}}</label>
+        </div>
+        <div>
+            <label for="">Contact Number: {{customer.get_contact_number()}}</label>
         </div>
         <div>
             <label for="">Height: {{customer.get_height()}}</label>
@@ -33,16 +39,11 @@
         <div>
             <label for="">Events: {{customer.get_events()}}</label>
         </div>
-        <div>
-            <label for="">Points: {{customer.get_points()}}</label>
-        </div>
-        <div>
-            <label for="">Password: {{customer.get_password()}}</label>
-        </div>
-        <td><a href="/update_customer/{{customer.get_email()}}" class="updatebtn">Update</a></td>
+
+        <td><a href="/update_customer/{{customer.get_customer_id()}}" class="updatebtn">Update</a></td>
     </section>
 </div>
 {% else %}
-    <p>No customer profile available</p>
+<p>No customer profile available</p>
 {% endif %}
 {% endblock %}
