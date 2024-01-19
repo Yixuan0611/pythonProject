@@ -3,8 +3,9 @@ from wtforms.fields import EmailField, DateField
 
 
 class LoginForm(Form):
-    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
-    password = PasswordField('Password', [validators.length(min=5, max=15), validators.data_required()])
+    email = StringField('Email', [validators.Email(), validators.DataRequired()])
+    password = PasswordField('Password', [validators.Length(min=5, max=15), validators.DataRequired()])
+
 
 
 class CreateCustomerForm(Form):

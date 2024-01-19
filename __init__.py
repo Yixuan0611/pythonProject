@@ -4,39 +4,63 @@ import shelve, Customer, Products, Staff
 from LoginCheck import logincheck
 
 app = Flask(__name__,static_url_path='/static')
-app.secret_key = 'your_secret_key'
-customers_dict = {}
-staff_dict = {}
+app.secret_key = 'thisisoursecretkey'
+
 
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
+    if 'user_role' in session:
+        if session['user_role'] == 'staff':
+            return render_template('interface_staff.html', session=session)
+        elif session['user_role'] == 'customer':
+            # Assuming customer_profile contains the customer's profile information
+            return render_template('interface_customer.html', session=session)
+    return redirect(url_for('logout'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     create_login_form = LoginForm(request.form)
     if request.method == 'POST' and create_login_form.validate():
-        customer = logincheck(create_login_form.email.data, create_login_form.password.data)
+        user = logincheck(create_login_form.email.data, create_login_form.password.data)
+
         customers_dict = {}
-        db = shelve.open('customer.db', 'r')
-        customers_dict = db['Customers']
-        db.close()
+        db = shelve.open('customer.db', 'c')
+        try:
+            customers_dict = db['Customers']
+        except:
+            print("Error in retrieving Customers from customer.db.")
+
+        for key in customers_dict:
+            customer_user = customers_dict.get(key)
+            if user.email_get() == customer_user.get_email():
+                if user.password_get() == customer_user.get_password():
+                    email = user.email_get()
+                    session['user_role'] = 'customer'
+                    return redirect(url_for('viewcustomerprofile', id=customer_user.get_customer_id()))
+                else:
+                    return 'Invalid password'
+            else:
+                return 'Invalid email'
+
         staff_dict = {}
-        db = shelve.open('staff.db', 'r')
-        staff_dict = db['Staff']
-        db.close()
-        if customer.email_get() in customers_dict:
-            user = customers_dict.get(customer.email_get())
-            if customer.password_get() == request.form['password']:
-                email = customer.email_get()
-                return redirect(url_for('viewcustomerprofile', email=email))
-            elif customer.email_get() in staff_dict:
-                print('in staff db')
-                user = staff_dict.get(customer.email_get())
-                print(user.get_password())
-                if customer.password_get() == request.form['password']:
-                    email = user
-                    return redirect(url_for('viewstaffprofile', email=email))
+        db = shelve.open('staff.db', 'c')
+        try:
+            staff_dict = db['Staff']
+        except:
+            print("Error in retrieving Staff from staff.db.")
+
+        for key in staff_dict:
+            staff_user = staff_dict.get(key)
+            if user.email_get() == staff_user.get_email():
+                if user.password_get() == staff_user.get_password():
+                    email = user.email_get()
+                    session['user_role'] = 'staff'
+                    return redirect(url_for('viewstaffprofile', id=staff_user.get_staff_id()))
+                else:
+                    return 'Invalid password'
+            else:
+                return 'Invalid email'
+
     return render_template('login.html', form=create_login_form)
 
 @app.route('/logout')
@@ -66,6 +90,8 @@ def create_customer():
         db['Customers'] = customers_dict
 
         db.close()
+
+        session['user_role'] = 'customer'
 
         return redirect(url_for('viewcustomerprofile', id=customer.get_customer_id()))
     return render_template('create_customer.html', form=create_customer_form)
@@ -174,6 +200,8 @@ def create_staff():
         db['Staff'] = staff_dict
 
         db.close()
+
+        session['user_role'] = 'staff'
 
         return redirect(url_for('viewstaffprofile', id=staff.get_staff_id()))
     return render_template('create_staff.html', form=create_staff_form)
