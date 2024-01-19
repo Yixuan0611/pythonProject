@@ -34,6 +34,7 @@ def login():
             customer_user = customers_dict.get(key)
             if user.email_get() == customer_user.get_email():
                 if user.password_get() == customer_user.get_password():
+                    print(user.email_get())
                     email = user.email_get()
                     session['user_role'] = 'customer'
                     return redirect(url_for('viewcustomerprofile', id=customer_user.get_customer_id()))
@@ -65,8 +66,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('user_role', None)
+    session.clear()
     return redirect(url_for('login'))
+
 
 #CRUD for customer
 @app.route('/newcustomer', methods=['GET', 'POST'])
@@ -88,7 +90,6 @@ def create_customer():
                                      create_customer_form.events.data)
         customers_dict[customer.get_customer_id()] = customer
         db['Customers'] = customers_dict
-
         db.close()
 
         session['user_role'] = 'customer'
@@ -110,14 +111,16 @@ def retrieve_customer():
 
     return render_template('z_customerprofiles.html', count=len(customers_list), customers_list=customers_list)
 
-@app.route('/customerprofile/<int:id>/')
+@app.route('/customerprofile/<int:id>/', methods=["GET","POST"])
 def viewcustomerprofile(id):
     customers_dict = {}
     db = shelve.open('customer.db', 'r')
     customers_dict = db['Customers']
     db.close()
     customer = customers_dict.get(id)
-    return render_template('interface_customer.html', customer=customer)
+    id = customer.get_customer_id()
+    session['user_id'] = id
+    return render_template('interface_customer.html', customer=customer, id=id)
 
 @app.route('/updatecustomerprofile/<int:id>/', methods=['GET', 'POST'])
 def update_customer(id):
@@ -227,6 +230,10 @@ def viewstaffprofile(id):
     staff_dict = db['Staff']
     db.close()
     staff = staff_dict.get(id)
+    id = staff.get_staff_id()
+    session['user_id'] = id
+
+
     return render_template('interface_staff.html', staff=staff)
 
 @app.route('/updatestaffprofile/<int:id>/', methods=['GET', 'POST'])
