@@ -31,7 +31,7 @@
             <label for="">Position: {{staff.get_position()}}</label>
         </div>
 
-        <td><a href="/update_staff/{{staff.get_staff_id()}}" class="updatebtn">Update</a></td>
+        <td><a href="/updatestaffprofile/{{ session['user_id'] }}" class="updatebtn">Update</a></td>
     </section>
 </div>
 {% else %}

@@ -40,7 +40,7 @@
             <label for="">Events: {{customer.get_events()}}</label>
         </div>
 
-        <td><a href="/update_customer/{{customer.get_customer_id()}}" class="updatebtn">Update</a></td>
+        <td><a href="/updatecustomerprofile/{{ session['user_id'] }}" class="updatebtn">Update</a></td>
     </section>
 </div>
 {% else %}

@@ -1,22 +1,24 @@
-.updatebtn{
-    width:50px;
-    height:25px;
-    background:#fff;
-    border:none;
-    outline:none;
-    border-radius:20px;
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
+.updatebtn {
+    width: 100px;
+    height: 50px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
-    font-size:16px;
-    font-weight:600;
+    font-size: 16px;
+    font-weight: 600;
     margin-left: 20px;
     color: white;
     background-color: green;
-    }
-.updatebtn:hover{
-background-color: #04AA6D; /* Green */
-  color: white;
 }
+
+.updatebtn:hover {
+    background-color: #04AA6D; /* Green */
+    color: white;
+}
+
 .hero{
     height:100%
     width:100%
@@ -87,6 +89,43 @@ background-color: #04AA6D; /* Green */
 .navbar-nav .cart-link:hover,
 .navbar-nav .logout-link:hover {
     background-color: #3e8e41;
+}
+
+.flash-messages {
+  margin-bottom: 10px;
+}
+
+/* Flash styling */
+.flash-messages {
+  margin-bottom: 10px;
+}
+
+.flash-message {
+  position: relative;
+  padding: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  color: #721c24;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.close-btn:focus {
+  outline: none;
+}
+
+.flash-message:first-child {
+  margin-top: 10px;
 }
 
 /* Overall styling */

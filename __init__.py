@@ -23,46 +23,41 @@ def login():
     if request.method == 'POST' and create_login_form.validate():
         user = logincheck(create_login_form.email.data, create_login_form.password.data)
 
+        # Customer authentication logic
         customers_dict = {}
         db = shelve.open('customer.db', 'c')
         try:
             customers_dict = db['Customers']
-        except:
-            print("Error in retrieving Customers from customer.db.")
-
-        for key in customers_dict:
-            customer_user = customers_dict.get(key)
-            if user.email_get() == customer_user.get_email():
-                if user.password_get() == customer_user.get_password():
-                    print(user.email_get())
-                    email = user.email_get()
+            for key in customers_dict:
+                customer_user = customers_dict.get(key)
+                if user.email_get() == customer_user.get_email() and user.password_get() == customer_user.get_password():
                     session['user_role'] = 'customer'
+                    db.close()
                     return redirect(url_for('viewcustomerprofile', id=customer_user.get_customer_id()))
                 else:
-                    return 'Invalid password'
-            else:
-                return 'Invalid email'
+                    flash('Invalid email or password')  # Add flash message here
+        except:
+            print("Error in retrieving Customers from customer.db.")
+        finally:
+            db.close()
 
+        # Staff authentication logic
         staff_dict = {}
         db = shelve.open('staff.db', 'c')
         try:
             staff_dict = db['Staff']
+            for key in staff_dict:
+                staff_user = staff_dict.get(key)
+                if user.email_get() == staff_user.get_email() and user.password_get() == staff_user.get_password():
+                    session['user_role'] = 'staff'
+                    db.close()
+                    return redirect(url_for('viewstaffprofile', id=staff_user.get_staff_id()))
         except:
             print("Error in retrieving Staff from staff.db.")
+        finally:
+            db.close()
 
-        for key in staff_dict:
-            staff_user = staff_dict.get(key)
-            if user.email_get() == staff_user.get_email():
-                if user.password_get() == staff_user.get_password():
-                    email = user.email_get()
-                    session['user_role'] = 'staff'
-                    return redirect(url_for('viewstaffprofile', id=staff_user.get_staff_id()))
-                else:
-                    return 'Invalid password'
-            else:
-                return 'Invalid email'
-
-    return render_template('login.html', form=create_login_form)
+    return render_template('login.html', form=create_login_form)\
 
 @app.route('/logout')
 def logout():
@@ -93,6 +88,8 @@ def create_customer():
         db.close()
 
         session['user_role'] = 'customer'
+
+        flash('Customer created successfully')
 
         return redirect(url_for('viewcustomerprofile', id=customer.get_customer_id()))
     return render_template('create_customer.html', form=create_customer_form)
@@ -146,7 +143,9 @@ def update_customer(id):
         db['Customers'] = customers_dict
         db.close()
 
-        return redirect(url_for('retrievecustomerprofiles'))
+        flash('Customer updated successfully')
+
+        return redirect(url_for('viewcustomerprofile', id=id))
     else:
         customers_dict = {}
         db = shelve.open('customer.db', 'r')
@@ -154,6 +153,8 @@ def update_customer(id):
         db.close()
 
         customer = customers_dict.get(id)
+        id = customer.get_customer_id()
+        session['user_id'] = id
         update_customer_form.first_name.data = customer.get_first_name()
         update_customer_form.last_name.data = customer.get_last_name()
         update_customer_form.email.data = customer.get_email()
@@ -170,17 +171,19 @@ def update_customer(id):
 
 @app.route('/deletecustomerprofile/<int:id>', methods=['POST'])
 def delete_customer(id):
-    customers_dict = {}
+    customer_dict = {}
     db = shelve.open('customer.db', 'w')
-    customers_dict = db['Customers']
 
-    customers_dict.pop(id)
+    if 'Customers' in db:
+        customer_dict = db['Customers']
+        if id in customer_dict:
+            customer_dict.pop(id)
+            db['Customers'] = customer_dict
+            flash('Customer deleted successfully')
 
-    db['Customers'] = customers_dict
     db.close()
 
-    return redirect(url_for('viewcustomerprofile'))
-
+    return redirect(url_for('retrieve_customer'))
 
 #CRUD for staff
 @app.route('/newstaff', methods=['GET', 'POST'])
@@ -201,10 +204,12 @@ def create_staff():
                             create_staff_form.contact_number.data, create_staff_form.position.data)
         staff_dict[staff.get_staff_id()] = staff
         db['Staff'] = staff_dict
-
+        print(staff.get_email())
         db.close()
-
+        print(staff_dict)
         session['user_role'] = 'staff'
+
+        flash('Staff created successfully')
 
         return redirect(url_for('viewstaffprofile', id=staff.get_staff_id()))
     return render_template('create_staff.html', form=create_staff_form)
@@ -233,7 +238,6 @@ def viewstaffprofile(id):
     id = staff.get_staff_id()
     session['user_id'] = id
 
-
     return render_template('interface_staff.html', staff=staff)
 
 @app.route('/updatestaffprofile/<int:id>/', methods=['GET', 'POST'])
@@ -257,7 +261,9 @@ def update_staff(id):
         db['Staff'] = staff_dict
         db.close()
 
-        return redirect(url_for('retrievestaffprofiles'))
+        flash('Staff updated successfully')
+
+        return redirect(url_for('viewstaffprofile', id=id))
     else:
         staff_dict = {}
         db = shelve.open('staff.db', 'r')
@@ -270,7 +276,7 @@ def update_staff(id):
         update_staff_form.email.data = staff.get_email()
         update_staff_form.password.data = staff.get_password()
         update_staff_form.gender.data = staff.get_gender()
-        update_staff_form.dob.data = staff.dob()
+        update_staff_form.dob.data = staff.get_dob()
         update_staff_form.contact_number.data = staff.get_contact_number()
         update_staff_form.position.data = staff.get_position()
 
@@ -280,12 +286,17 @@ def update_staff(id):
 def delete_staff(id):
     staff_dict = {}
     db = shelve.open('staff.db', 'w')
-    staff_dict.pop(id)
 
-    db['Staff'] = staff_dict
+    if 'Staff' in db:
+        staff_dict = db['Staff']
+        if id in staff_dict:
+            staff_dict.pop(id)
+            db['Staff'] = staff_dict
+            flash('Staff deleted successfully')
+
     db.close()
 
-    return redirect(url_for('retrievestaffprofiles'))
+    return redirect(url_for('retrieve_staff'))
 
 """
 #CRUD for products

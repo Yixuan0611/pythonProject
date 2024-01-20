@@ -5,6 +5,18 @@
 <section id="loginform">
     <div class="box">
         <h3 class="first-title">Login</h3>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+            <div class="flash-message">
+                {{ message }}
+                <button class="close-btn" onclick="this.parentNode.style.display = 'none';">×</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
         <form method="POST" action="">
             <div class="form-group">
                 {{ render_field(form.email, class="form-control") }}
@@ -14,7 +26,9 @@
                 <a href="/verify">Forgot Password</a>
             </div>
 
-           <div class="login-btn"> <button type="submit" value="submit" class="login-btn">Login</button></div>
+            <div class="login-btn">
+                <button type="submit" value="submit" class="login-btn">Login</button>
+            </div>
             <div class="register-link">
                 <p>Dont have an account?<a href="newcustomer">Register Here</a></p>
             </div>

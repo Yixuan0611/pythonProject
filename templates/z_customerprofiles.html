@@ -48,7 +48,8 @@
             <td>{{ customer.get_personal_style() }}</td>
             <td>{{ customer.get_events() }}</td>
 
-            <td><a href="/interface_customer/{{customer.get_customer_id()}}" class="btn btn-warning">viewprofile</a>
+            <td><a href="/updatecustomerprofile/{{ session['user_id'] }}" class="btn btn-warning">Update</a>
+
             </td>
             <td>
                 <form action="{{url_for('delete_customer', id=customer.get_customer_id())}}" method="POST">
